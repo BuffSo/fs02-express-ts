@@ -1,23 +1,15 @@
-import mongoose, { model, Schema } from "mongoose";
+import mongoose from 'mongoose';
 
-mongoose.connect('mongodb://root:example@localhost:27017')
+async function connectDB() {
+
+
+  mongoose.connect('mongodb://root:example@localhost:27017/pandamaket_dev?authSource=admin')
   .then(() => console.log('MongoDB Connected!'))
   .catch((err) => console.error('MongoDB Connection Error:', err))
 
-mongoose.connection.on('error', (error) => {
-  console.log('MongoDB Error:', error)
-})
-
-interface IUser {
-  id: string;
-  name: string;
-  email: string;
+  mongoose.connection.on('error', (error) => {
+    console.log('MongoDB Error:', error)
+  })
 }
 
-const userSchema = new Schema<IUser>({
-  id: { type: String, required: true, unique: true},
-  name: { type: String, required: true },
-  email: { type: String, required: true },
-})
-
-export const User = model<IUser>('User', userSchema)
+export default connectDB;

@@ -1,12 +1,16 @@
 import express, { RequestHandler } from 'express'
 import axios from 'axios'
 import multer from 'multer'
-import { MongooseUserRepository } from './repositories/mongoose/user.repository'
+import connectDB from './mongoose'
 import { UserService } from './services/user.service'
 import { UserController } from './controllers/user.controller'
+import { MongooseUserRepository } from './repositories/mongoose/user.repository'
 import { PrismaUserRepository } from './repositories/prisma/user.repository'
 
 const app = express()
+app.use(express.json());
+
+connectDB();
 const upload = multer({ dest: 'uploads/' })
 
 const handler: RequestHandler = async (req, res, next) => {
@@ -34,14 +38,14 @@ app.post('/upload', upload.single('file'), (req, res) => {
   res.send()
 })
 
-
 // Hexagonal Architecture
 // repository: db에 접근하는 인터페이스
 const mongooseUserRepository = new MongooseUserRepository()
-const prismaUserRepository = new PrismaUserRepository()
+//const prismaUserRepository = new PrismaUserRepository()
 
 // service: 비지니스 로직이 작성된 곳
-const userService = new UserService(prismaUserRepository)
+const userService = new UserService(mongooseUserRepository)
+//const userService = new UserService(prismaUserRepository)
 
 // controller: endpoint를 매핑해서 service를 연결해주는 곳
 const userController = new UserController(userService)

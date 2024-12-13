@@ -7,7 +7,7 @@ export class UserService {
   // 비지니스 로직의 영향이 없이 db가 바뀔 수 있는 구조
   constructor (private userRepository: IUserRepository) {}
 
-  async createUser (data: Pick<User, 'email' | 'name'>): Promise<User> {
+  async createUser (data: Pick<User, 'email' | 'nickname' | 'name'>): Promise<User> {
     return this.userRepository.create(data)
   }
 
